@@ -3,20 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <title>Home Usuario</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-
-    <!-- Incluir la barra de navegación -->
     <div th:replace="~{layout/navbar :: navbar}"></div>
-	<h1>Bienvenido, Usuario</h1>
-	<p>Este es tu panel de usuario.</p>
-	<a href="/user/personas" class="btn btn-primary">Ver Lista de
-		Personas</a>
-	<a href="/admin/dashboard" class="btn btn-primary">Dashboard admin</a>
-	<form th:action="@{/logout}" method="post">
-		<button type="submit" class="btn btn-danger">Cerrar Sesión</button>
-	</form>
+    <div class="container mt-5 text-center">
+        <h1>Bienvenido a la Plataforma de Eventos</h1>
+        <p>Administra y organiza tus eventos de manera sencilla.</p>
+        <div class="mt-4">
+            <a href="/user/eventos" class="btn btn-primary">Ver Lista de Eventos</a>
+            <a href="/admin/dashboard" class="btn btn-secondary">Panel de Administración</a>
+        </div>
+        <div class="mt-4">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

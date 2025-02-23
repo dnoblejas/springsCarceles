@@ -1,6 +1,7 @@
 package com.example.crudusuario.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -15,28 +16,47 @@ public class PersonaService {
         this.personaRepository = personaRepository;
     }
 
-    public List<Persona> listarPersonas() {
+    public List<Persona> obtenerTodasLasPersonas() {
         return personaRepository.findAll();
     }
 
     public Persona obtenerPersonaPorId(Long id) {
-        return personaRepository.findById(id).orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+        return personaRepository.findById(id).orElse(null);
     }
 
-    public void actualizarPersona(Long id, Persona personaActualizada) {
-        Persona persona = obtenerPersonaPorId(id);
-        persona.setNombre(personaActualizada.getNombre());
-        persona.setApellidos(personaActualizada.getApellidos());
-        persona.setEmail(personaActualizada.getEmail());
+    public void agregarPersona(Persona persona) {
         personaRepository.save(persona);
+    }
+
+    public void actualizarPersona(Long id, Persona persona) {
+        if (personaRepository.existsById(id)) {
+            persona.setId(id);
+            personaRepository.save(persona);
+        }
     }
 
     public void eliminarPersona(Long id) {
         personaRepository.deleteById(id);
     }
-    
-    public void agregarPersona(Persona persona) {
-		if (persona.getId() == null)
-			personaRepository.save(persona);
-	}
+
+    public List<String> obtenerCiudadesUnicas() {
+        return personaRepository.findAll().stream()
+                .map(Persona::getUbicacion) 
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<String> obtenerArtistasUnicos() {
+        return personaRepository.findAll().stream()
+                .map(Persona::getArtista) 
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<Persona> filtrarEventos(String ciudad, String artista) {
+        return personaRepository.findAll().stream()
+                .filter(e -> (ciudad == null || ciudad.isEmpty() || "Todas".equals(ciudad) || e.getUbicacion().equalsIgnoreCase(ciudad)))
+                .filter(e -> (artista == null || artista.isEmpty() || "Todos".equals(artista) || e.getArtista().equalsIgnoreCase(artista)))
+                .collect(Collectors.toList());
+    }
 }
